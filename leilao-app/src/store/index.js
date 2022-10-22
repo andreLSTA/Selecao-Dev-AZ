@@ -1,15 +1,18 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+import empresas from "./modules/empresas";
+import leiloes from "./modules/leiloes";
+import unidades from "./modules/unidades";
+import alertas from "./modules/alertas";
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
+    modules: {
+        empresas,
+        leiloes,
+        unidades,
+        alertas
+    }
 })

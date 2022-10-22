@@ -1,18 +1,13 @@
 package br.com.selecao.locadora.entity;
 
+import br.com.selecao.locadora.entity.embeddable.DefaultTimestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Data
@@ -21,17 +16,21 @@ import java.io.Serializable;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
-@Table(name = "TB_UNIDADE")
+@Table(name = "tb_unidade")
 @SequenceGenerator(name = "seq_unidade", sequenceName = "seq_unidade", allocationSize = 1)
 public class Unidade implements Serializable {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_unidade")
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "NOME")
+    @Column(name = "nome", length = 128, nullable = false)
     private String nome;
+
+    @Embedded
+    private DefaultTimestamp timestamps = new DefaultTimestamp();
+
 }
 

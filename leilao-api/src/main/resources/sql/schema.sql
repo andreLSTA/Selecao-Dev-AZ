@@ -1,0 +1,117 @@
+-- ====== DROP TABLES ====== --
+DROP TABLE IF EXISTS tb_unidade;
+DROP TABLE IF EXISTS tb_comprador;
+DROP TABLE IF EXISTS tb_lote;
+DROP TABLE IF EXISTS tb_leilao;
+DROP TABLE IF EXISTS tb_empresa;
+
+-- ====== DROP SEQUENCES ====== --
+DROP SEQUENCE IF EXISTS seq_unidade;
+DROP SEQUENCE IF EXISTS seq_comprador;
+DROP SEQUENCE IF EXISTS seq_lote;
+DROP SEQUENCE IF EXISTS seq_leilao;
+DROP SEQUENCE IF EXISTS seq_empresa;
+
+-- ====== UNIDADE ====== --
+CREATE SEQUENCE seq_unidade
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9999999
+START 1
+CACHE 1;
+
+CREATE TABLE tb_unidade (
+    id INT8 NOT NULL,
+    nome VARCHAR(128) NOT NULL,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);
+
+-- ====== EMPRESA ====== --
+CREATE SEQUENCE seq_empresa
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9999999
+START 1
+CACHE 1;
+
+CREATE TABLE tb_empresa (
+    id INT8 NOT NULL,
+    bairro VARCHAR(64),
+    cep VARCHAR(16),
+    cnpj VARCHAR(32) NOT NULL UNIQUE,
+    complemento VARCHAR(64),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    email VARCHAR(254) NOT NULL,
+    logradouro VARCHAR(64),
+    municipio VARCHAR(64),
+    numero VARCHAR(10),
+    razao_social VARCHAR(64) NOT NULL,
+    senha VARCHAR(128),
+    site VARCHAR(254),
+    telefone VARCHAR(32),
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    usuario VARCHAR(20) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
+ );
+
+-- ====== LEILÃO ====== --
+CREATE SEQUENCE seq_leilao
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9999999
+START 1
+CACHE 1;
+
+CREATE TABLE tb_leilao (
+    id INT8 NOT NULL,
+    codigo INT4,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    descricao VARCHAR(60) NOT NULL,
+    inicio_previsto TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    vendedor INT8 NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (vendedor) REFERENCES tb_empresa(id) ON DELETE CASCADE
+);
+
+-- ====== LOTE ====== --
+CREATE SEQUENCE seq_lote
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9999999
+START 1
+CACHE 1;
+
+CREATE TABLE tb_lote (
+    id INT8 NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    descricao VARCHAR(60) NOT NULL,
+    numero_lote INT4,
+    quantidade FLOAT4 NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    unidade VARCHAR(128) NOT NULL,
+    valor_inicial FLOAT4,
+    leilao INT8 NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (leilao) REFERENCES tb_leilao(id) ON DELETE CASCADE
+);
+
+-- ====== COMPRADOR ====== --
+CREATE SEQUENCE seq_comprador
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9999999
+START 1
+CACHE 1;
+
+CREATE TABLE tb_comprador (
+    id INT8 NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    empresa INT8 NOT NULL,
+    leilao INT8 NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (empresa) REFERENCES tb_empresa(id) ON DELETE CASCADE,
+    FOREIGN KEY (leilao) REFERENCES tb_leilao(id) ON DELETE CASCADE
+);
